@@ -1,0 +1,23 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+% biblatex (requires biber; sudo pacman -S biber)
+% \usepackage[style=authoryear-ibid]{biblatex} % biblatex
+\usepackage[style=authoryear-ibid,backend=bibtex8]{biblatex} % bibtex
+\addbibresource{./content/bib/bib1.bib ./content/bib/bib2.bib}
+
+\usepackage{graphicx}
+\graphicspath{ {./content/img/} }
+
+\begin{document}
+
+  Citation \autocite{gentry2009fully}
+
+  % % bibtex version
+  % \bibliography{./content/bib/bib1.bib, ./content/bib/bib2.bib}
+  % \bibliographystyle{unsrt}
+
+  % % biblatex version
+  \printbibliography
+
+\end{document}
