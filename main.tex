@@ -1,55 +1,47 @@
-\documentclass{article}
+\documentclass[preview]{standalone}
 \usepackage[utf8]{inputenc}
 
-% biblatex (requires biber; sudo pacman -S biber)
-\usepackage[style=authoryear-ibid]{biblatex} % biblatex
-\addbibresource{"./content/bib/bib1.bib"}
-\addbibresource{"./content/bib/bib2.bib"}
-
-\usepackage{graphicx}
-\graphicspath{ {./content/img/} }
+\usepackage{pgfgantt}
 
 \begin{document}
-
-  Citation \autocite{gentry2009fully, Goodfellow-et-al-2016}
-
-  Image:
-  \begin{figure}[th!]
-    \centering
-    \includegraphics[width=\textwidth]{encrypted_cnn.png}
-    \caption{Computational 1D CNN computational graph.}
-    \label{fig:gan}
-  \end{figure}
-
-  Equations:
-
-  \begin{equation}
-    \label{sigmoid}
-    \sigma(x) = \frac{1}{1+e^{-x}}
-  \end{equation}
-
-  \begin{equation}
-    \label{sigmoid_approx}
-    \sigma(x) \approx 0.5 + 0.197x + -0.004x^3
-  \end{equation}
-
-  \begin{equation}
-    \label{cnn_activation}
-    a^{<t>}=\sigma(w_{i}^{<t>}x^{<t>}+b_i^{<t>})
-  \end{equation}
-
-  \begin{equation}
-    \label{gradient}
-    \frac{df}{d\sigma} = (1-\sigma{x}) * \sigma{x}
-  \end{equation}
-
-  \begin{equation}
-    \label{weight_update}
-    % learning rate
-    w_i^{j+1<t>} = w_i^{j<t>} - (l * \frac{df}{dw_i^{j<t>}})
-  \end{equation}
-
-  % % biblatex version
-  \printbibliography
-
+    % \begin{figure}
+      \begin{ganttchart}[
+        hgrid,
+        vgrid,
+        inline,
+        y unit title=0.5cm,
+        y unit chart=0.7cm,
+        x unit = .6cm,
+        bar height=0.6,
+        title height=1,
+        title label font=\footnotesize,
+        group top shift=0.9,
+        time slot format=isodate-yearmonth,
+        time slot unit=month
+        ]{2018-11}{2022-01}
+        \gantttitle[title label font=\bfseries]{The Augmented Agronomist and Privacy-Preserving Neural Networks}{37} \\
+          \gantttitlecalendar{year, month} \\
+            \ganttgroup{Data Collection System}{2018-11}{2021-11} \\
+              \ganttgroup{Nemesyst}{2018-11}{2019-08} \\
+                \ganttbar{Implementation}{2018-11}{2019-03} \\
+                \ganttbar{Journal Paper}{2019-01}{2019-08} \\
+            \ganttgroup{Data Collection and Aggregation}{2019-06}{2021-11} \\
+              \ganttbar{Data Collection}{2019-06}{2019-11} \\
+              \ganttbar{Data Paper}{2019-11}{2020-06} \\
+              \ganttbar{Data Collection}{2020-06}{2020-11} \\
+              \ganttbar{Data Collection}{2021-06}{2021-11} \\
+            \ganttgroup{Deep Learning}{2019-11}{2021-11} \\
+              \ganttbar{p-p neural networks}{2019-11}{2020-06} \\
+              \ganttbar{Yield Prediction}{2020-01}{2021-06} \\
+              \ganttbar{Uncertainty Metrics}{2020-07}{2021-06} \\
+              \ganttbar{p-p nn Paper}{2020-08}{2021-03} \\
+              \ganttbar{attention}{2021-04}{2021-06} \\
+              \ganttbar{yield Paper}{2021-05}{2021-11} \\
+            \ganttgroup{Thesis}{2020-11}{2022-01} \\
+            \ganttbar[]{Evaluation}{2020-11}{2021-06} \\
+            \ganttbar[]{Bulk Write up}{2021-02}{2022-01} \\
+      \end{ganttchart}
+    %   \caption{Overall PhD research plan.}
+    %   \label{fig:research_plan}
+    % \end{figure}
 \end{document}
