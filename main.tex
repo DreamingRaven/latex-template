@@ -42,10 +42,25 @@
       \end{column}
       \begin{column}{0.3\textwidth}
         \begin{block}{About our pipeline}
-          To both evaluate, and implement FHE deep learning in practice, we decided to create a two part system.
-          One local on-site edge device that serves as a standalone data wrangler, encryptor, and private key holder. This edge device is capable of obtaining the latest and most performant deep neaural network from our offsite archive, and using this to predict locally/ on-site albeit in a much diminished manner due to the naturally lower specification of an edge device. \\
-          This device can also serve as a gateway for encrypted ciphertexts without their private keys, to go to an arbitrary backend server for much more intensive processing, which would require more performant hardware, while making it impossible for this backend/ off-site server to garner any information from this ciphertext being that it is undecryptable at any point offsite.
-          Further to this both on-site and off-site servers expose both a web REST API and web app functionality to make it easy to use, while also creating an expandable interface and realistic scenarios for encrypted deep learning as a service to be evaluated properly.
+          To both evaluate, and implement FHE deep learning in practice, we decided to create a two part system:
+          \begin{itemize}
+            \item An on-site edge device server.
+              \begin{itemize}
+                \item The data encryptor, and key handler such that private keys have solely an on-site presence and thus are under the data owners direct control, and ultimately choice.
+                \item Capable of edge compute for inference and prediction at the point of need without requiring any off-site processing.
+                \item REST API for direct programmatic control and communication.
+                \item Local web app for easy data submission and control for when there is limited time or expertise for fine grained API control.
+                \item Serves as a gateway to our larger more powerful data processing backend, by sharing only ciphertexts without the respective private keys.
+              \end{itemize}
+            \item An off-site data processor.
+              \begin{itemize}
+                \item Higher performance hardware for much longer and more complex computations such as those in training.
+                \item Configured and ready for scaling, with reverse proxies, and horizontal scalable MongoDB.
+                \item REST API for scalable direct programmatic control and communication.
+                \item Global web app for experimentation and testing.
+                \item Can not decrypt any data since it will not have any private keys to decrypt with.
+              \end{itemize}
+          \end{itemize}
         \end{block}
       \end{column}
     \end{columns}
@@ -63,8 +78,16 @@
       \end{column}
       \begin{column}{0.35\textwidth}
         \begin{block}{Combining Deep Learning and Fully Homomorphic encryption}
-          Deep Learning has become state-of-the-art in many machine learning tasks such as; image recognition, and classification; time series prediction, and sequence generation; self driving, and autonomous robotics. Thus since the majority of data desired to be processed is in tabular, and time series forms, or image, and video form, it only makes sense that to prove the applicability of FHE to computing this data that it should be evaluated and used in conjunction with deep learning i.e the state-of-the-art in these types of problems. \\
-          We used the Cheon, Kim, Kim and Song (CKKS) \autocite{ckks} FHE encryption scheme, which is a form of FHE that allows it to operate on floating point numbers, which are the required type for deep learning which usually operates in the range 0-1. However all libraries available at this time are written in much lower level languages such as C++ compared to most deep learning frameworks which operate in python. To merge the two we had to create our own open source abstraction library and bindings to allow us to use CKKS FHE in python and at some scale. We also had to make sure neural networks in particular activation functions were compatible with FHE, since the only standard operation FHE cannot do is division of ciphertexts. Thus instead of sigmoid which includes division (Eq:\ref{sigmoid}) we used a close approximation (Eq:\ref{sigmoid_approx}) in the 1D CNN space as time equation \ref{cnn_activation}.
+          Deep learning is state-of-the-art and very pervasive in many machine learning tasks, such as time series prediction used here, thus we combine FHE with deep learning:
+          \begin{itemize}
+              \item Deep learning usually operates in the range 0-1 this we need to use the Cheon, Kim, Kim, and Song (CKKS) \autocite{ckks} encryption scheme which can use floating point numbers unlike most other schemes.
+              \item Existing deep learning works predominantly exist in python, whereas most FHE libraries use C++, thus we created our own open-source bindings, and abstraction layer to take this C++ and integrate it with python and deep learning.
+              \item Deep learning activation functions are usually incompatible with FHE since they require division such as sigmoid (Eq:\ref{sigmoid}).
+              \item We use a polynomial sigmoid approximation (Eq:\ref{sigmoid_approx}) to avoid incompatibility.
+              \item We use a 1D CNN in place of RNNs since the computational depth is shorter and wider.
+              \item Shorter computational depth means we need less expensive operations to squish the ciphertext down (bootstrapping) to a manageable size.
+              \item Wider more independent computations lend them selves better parallelization and optimization as they can occur simultaneously.
+          \end{itemize}
         \end{block}
       \end{column}
     \end{columns}
